@@ -13,4 +13,6 @@ public class ProductModel implements Modelable{
     private String category;
     private double price ;
     private int remainingCount;
+
+
 }
