@@ -16,5 +16,7 @@ public class CustomerModel implements Modelable{
     private double balance;
     private String movbileNumber;
     private String email;
-    private String preferedCommunicationWay;
+    private String password;
+    private String preferredCommunicationWay;
+
 }
