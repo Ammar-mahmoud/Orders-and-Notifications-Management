@@ -18,7 +18,7 @@ public class CustomerDB implements Repoable {
         customerDB.remove(modelable);
     }
 
-    public Modelable search(int id) {
+    public Modelable search(String name) {
         for (CustomerModel customerModel : customerDB){
             if (customerModel.getID() == id){
                 return customerModel;
