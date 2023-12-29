@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SimpleOrder extends OrderModel{
     private double totalPrice;
-    private List<ProductModel> orderProducts;
-    private CustomerModel customer;
+    ShoppingCartModel shoppingCartModel;
+    private String customerName;
 }

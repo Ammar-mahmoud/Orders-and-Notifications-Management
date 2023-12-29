@@ -17,5 +17,6 @@ public class CustomerModel implements Modelable{
     private String email;
     private String password;
     private String preferredCommunicationWay;
+    private ShoppingCartModel shoppingCartModel;
 
 }

@@ -9,12 +9,18 @@ public class OrderDB implements Repoable{
     public static List<CompositOrder> compositOrderDB;
 
 
-//    public void add(OrderModel orderModel) {
-//        orderDB.add(orderModel);
-//    }
-//    public void delete(OrderModel orderModel) {
-//        orderDB.remove(orderModel);
-//    }
+    public void add(SimpleOrder simpleOrder) {
+        simpleOrderDB.add(simpleOrder);
+    }
+    public void add(CompositOrder compositOrder) {
+        compositOrderDB.add(compositOrder);
+    }
+    public void delete(SimpleOrder simpleOrder) {
+        simpleOrderDB.remove(simpleOrder);
+    }
+    public void delete(CompositOrder compositOrder) {
+        compositOrderDB.remove(compositOrder);
+    }
 //    public Modelable search(int id) {
 //        for(OrderModel order: orderDB)
 //        {

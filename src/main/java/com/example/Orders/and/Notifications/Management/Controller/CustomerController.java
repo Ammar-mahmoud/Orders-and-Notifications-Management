@@ -6,7 +6,6 @@ import com.example.Orders.and.Notifications.Management.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public class CustomerController {
 
     @PostMapping("/register")
     public Response registerCustomer(@RequestBody CustomerModel customer) {
-        System.out.println("in add Customer "+customer);
         boolean res = customerService.addCustomer(customer);
         Response response = new Response();
         if (!res) {
