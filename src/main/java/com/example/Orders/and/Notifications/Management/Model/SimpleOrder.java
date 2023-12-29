@@ -8,8 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SimpleOrder implements OrderModel{
-    private int ID;
+public class SimpleOrder extends OrderModel{
     private double totalPrice;
     private List<ProductModel> orderProducts;
     private CustomerModel customer;

@@ -8,8 +8,7 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class CustomerModel implements Modelable{
-    private int ID;
-    private String name;
+    private String name; // unique
     private String location;
     private String gender;
     private String language;
