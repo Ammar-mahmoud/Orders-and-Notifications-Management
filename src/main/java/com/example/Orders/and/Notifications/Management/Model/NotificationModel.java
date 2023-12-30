@@ -8,8 +8,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class NotificationModel implements Modelable{
     private CustomerModel customerModel;
-    private int notificationID;
     private String notificationTimeStamp;
-    private boolean sent;
-    private Map<String, String> placeholder;
+    private String subject;
+    private String notificationTosent;
+
+
 }

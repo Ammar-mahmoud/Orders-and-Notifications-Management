@@ -9,9 +9,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class NotificationTemplateModel implements Modelable{
-    private String content;
     private int templateID;
+    private String content;
     private String subject;
     private List<String> placeholders;
-    private List<String> languages;
 }
