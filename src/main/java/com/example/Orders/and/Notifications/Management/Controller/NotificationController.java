@@ -11,7 +11,7 @@ import java.util.Queue;
 
 @RestController
 @RequestMapping("/api/notification")
-public class NotificationController {
+public class NotificationController implements controllable {
     @Autowired
     private NotificarionService notificarionService;
 

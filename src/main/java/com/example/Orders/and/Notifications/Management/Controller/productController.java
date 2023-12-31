@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
-public class productController {
+public class productController implements controllable {
     @Autowired
     private ProductService productService;
 
