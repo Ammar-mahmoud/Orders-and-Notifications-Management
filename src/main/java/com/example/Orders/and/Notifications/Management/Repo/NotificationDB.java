@@ -1,18 +1,12 @@
 package com.example.Orders.and.Notifications.Management.Repo;
 import com.example.Orders.and.Notifications.Management.Model.*;
 import com.example.Orders.and.Notifications.Management.NotificationComponent.Notification;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import java.time.Instant;
-import java.time.LocalDate;
+
 import java.util.*;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 @Getter
 @Setter
@@ -42,7 +36,7 @@ public class NotificationDB implements Repoable {
         }
     }
 
-    public void makeNotificationforCompositeOrder(CompositOrder compositOrder, int type) {
+    public void makeNotificationforCompositeOrder(CompoundOrder compoundOrder, int type) {
         if (type == 1) {
             for (SimpleOrder simpleOrder : compositOrder.getOrders()) {
                 List<String> productNames = getProductNames(simpleOrder.getShoppingCartModel());

@@ -11,6 +11,7 @@ public class NotificationModel implements Modelable{
     private String notificationTimeStamp;
     private String subject;
     private String notificationTosent;
+    private String language;
 
 
 }
