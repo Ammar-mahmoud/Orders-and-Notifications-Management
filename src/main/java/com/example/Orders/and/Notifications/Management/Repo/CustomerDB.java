@@ -14,7 +14,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Component
-public class CustomerDB implements Repoable {
+public class CustomerDB implements Repoable , Observer{
     private final List<CustomerModel> customerDB;
 
     public void add(CustomerModel modelable) {
@@ -33,7 +33,7 @@ public class CustomerDB implements Repoable {
         }
         return null;
     }
-
+    @Override
     public boolean updateBalance(CustomerModel customerModel, double balance){
         if (customerModel.getBalance() >= balance){
             customerModel.setBalance(customerModel.getBalance() - balance);
@@ -48,5 +48,9 @@ public class CustomerDB implements Repoable {
         mm.put(productId,quantity);
         shoppingCartModel.setProducts(mm);
         shoppingCartModel.setTotalPrice(shoppingCartModel.getTotalPrice() + (productprice * quantity));
+    }
+
+    public void updateBalanceaftercancel(CustomerModel customerModel , double balance){
+        customerModel.setBalance(customerModel.getBalance()+balance);
     }
 }

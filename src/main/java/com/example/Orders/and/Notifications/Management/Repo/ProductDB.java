@@ -14,12 +14,12 @@ public class ProductDB implements Repoable {
     private final static List<ProductModel> productDB;
     static {
         productDB = new ArrayList<>();
-        productDB.add(new ProductModel("SN001", "book", "Ahmed", "Stationery", 5.0, 10, 94));
-        productDB.add(new ProductModel("SN002", "T-shirt", "Mohammed", "cloth", 25.0, 20, 12));
-        productDB.add(new ProductModel("SN003", "rice", "Ammar", "food", 50.0, 20, 50));
-        productDB.add(new ProductModel("SN004", "pen", "Ahmed", "Stationery", 15.0, 20, 30));
-        productDB.add(new ProductModel("SN005", "milk", "Ammar", "food", 40.0, 20, 25));
-        productDB.add(new ProductModel("SN006", "jacket", "Mohammed", "cloth", 200.0, 20, 60));
+        productDB.add(new ProductModel("SN001", "book", "Ahmed", "Stationery", 5.0, 124, 94));
+        productDB.add(new ProductModel("SN002", "T-shirt", "Mohammed", "cloth", 25.0, 72, 12));
+        productDB.add(new ProductModel("SN003", "rice", "Ammar", "food", 50.0, 75, 50));
+        productDB.add(new ProductModel("SN004", "pen", "Ahmed", "Stationery", 15.0, 124, 30));
+        productDB.add(new ProductModel("SN005", "milk", "Ammar", "food", 40.0, 75, 25));
+        productDB.add(new ProductModel("SN006", "jacket", "Mohammed", "cloth", 200.0, 72, 60));
 
     }
     public void addProduct(ProductModel productModel){productDB.add(productModel);}
@@ -34,14 +34,12 @@ public class ProductDB implements Repoable {
         }
         return null;
     }
-    public int  countRemainingPartsOfCategory(String category){
-        int cnt=0;
+    public void  updateRemainingPartsOfCategory(String category, int newRemaining){
         for(ProductModel model : productDB){
             if(model.getCategory().equals(category)) {
-                cnt += model.getRemainingCount();
+                model.setRemainingCount(newRemaining);
             }
         }
-        return cnt;
     }
     public List<ProductModel> getAllProducts()
     {

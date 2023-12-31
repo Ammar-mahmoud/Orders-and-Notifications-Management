@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class ShoppingCartModel {
+public class ShoppingCartModel implements Modelable {
     private double totalPrice;
     private Map<String, Integer> Products;
     public ShoppingCartModel() {

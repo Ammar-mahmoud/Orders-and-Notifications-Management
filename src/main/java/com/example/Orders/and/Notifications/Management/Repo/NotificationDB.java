@@ -14,38 +14,58 @@ import java.util.*;
 public class NotificationDB implements Repoable {
     private final CustomerDB customerDB;
     private final ProductDB productDB;
+    private final NotificationTemplateDB notificationTemplateDB;
     private Queue<NotificationModel> notificationQueue;
-    private Queue<NotificationModel> notificationDB;
+    private List<NotificationModel> notificationDB;
+    private NotificationTemplateModel placeOrderTemplate;
+    private NotificationTemplateModel shippingOrderTemplate;
+
+    public NotificationDB(CustomerDB customerDB, ProductDB productDB , NotificationTemplateDB notificationTemplateDB) {
+        this.customerDB = customerDB;
+        this.productDB = productDB;
+        this.notificationTemplateDB=notificationTemplateDB;
+        this.notificationQueue = new LinkedList<>();
+        this.notificationDB = new ArrayList<>();
+        this.placeOrderTemplate = notificationTemplateDB.CreatePlaceOrderTemplete();
+        this.shippingOrderTemplate = notificationTemplateDB.CreateShippingOrderTemplete();
+    }
 
     public void addNotification(NotificationModel notificationmodel) {
         notificationQueue.add(notificationmodel);
         notificationDB.add(notificationmodel);
     }
-    public void deleteNotification(){
+
+
+
+    public void deleteNotification() {
         notificationQueue.poll();
     }
 
     public void makeNotificationforSimpleOrder(SimpleOrder simpleOrder, int type) {
         if (type == 1) {
-            List<String> productNames = getProductNames(simpleOrder.getShoppingCartModel());
-            NotificationModel model = fillPlaceOrderTemplate(placeOrderTemplate, simpleOrder.getCustomerName(), productNames);
+            CustomerModel customerModel=customerDB.search(simpleOrder.getCustomerName());
+            List<String> productNames = getProductNames(customerModel.getShoppingCartModel());
+            NotificationModel model = notificationTemplateDB.fillPlaceOrderTemplate(placeOrderTemplate, simpleOrder.getCustomerName(), productNames);
             addNotification(model);
         } else {
-            NotificationModel model = fillShippingOrderTemplate(shippingOrderTemplate, simpleOrder.getCustomerName(), simpleOrder.getID());
+            NotificationModel model = notificationTemplateDB.fillShippingOrderTemplate(shippingOrderTemplate, simpleOrder.getCustomerName(), simpleOrder.getID());
             addNotification(model);
         }
     }
 
     public void makeNotificationforCompositeOrder(CompoundOrder compoundOrder, int type) {
         if (type == 1) {
-            for (SimpleOrder simpleOrder : compositOrder.getOrders()) {
-                List<String> productNames = getProductNames(simpleOrder.getShoppingCartModel());
-                NotificationModel notificationModel = fillPlaceOrderTemplate(placeOrderTemplate, simpleOrder.getCustomerName(), productNames);
+
+            for (SimpleOrder simpleOrder : compoundOrder.getOrders()) {
+                CustomerModel customerModel=customerDB.search(simpleOrder.getCustomerName());
+                List<String> productNames = getProductNames(customerModel.getShoppingCartModel());
+                NotificationModel notificationModel = notificationTemplateDB.fillPlaceOrderTemplate(placeOrderTemplate, simpleOrder.getCustomerName(), productNames);
                 addNotification(notificationModel);
             }
         } else {
-            for (SimpleOrder simpleOrder : compositOrder.getOrders()) {
-                NotificationModel model = fillShippingOrderTemplate(shippingOrderTemplate, simpleOrder.getCustomerName(), simpleOrder.getID());
+            for (SimpleOrder simpleOrder : compoundOrder.getOrders()) {
+                NotificationModel model = notificationTemplateDB.fillShippingOrderTemplate(shippingOrderTemplate, simpleOrder.getCustomerName(), simpleOrder.getID());
+                simpleOrder.setTotalPrice(simpleOrder.getTotalPrice()+40); // 40$ Shipping expenses
                 addNotification(model);
             }
         }
@@ -64,82 +84,12 @@ public class NotificationDB implements Repoable {
     public void processNotifications() {
         if (!notificationQueue.isEmpty()) {
             NotificationModel notificationModel = notificationQueue.poll();
-            Notification notification = new Notification(notificationModel.getCustomerModel().getPreferredCommunicationWay());
+            String preferredCommunication = notificationModel.getCustomerModel().getPreferredCommunicationWay();
+            Notification notification = new Notification(preferredCommunication);
             notification.execute(notificationModel);
         } else {
             System.out.println("no notification to send");
         }
     }
 
-    public StatisticModel generateLiveStatistics() {
-        int placeTempelate = 0, shippingTemplate = 0;
-        String Tempans = "";
-        String customercomm = "";
-        for (NotificationModel notificationModel : notificationDB) {
-            if (notificationModel.getSubject().equals("Place Order")) {
-                placeTempelate++;
-            } else {
-                shippingTemplate++;
-            }
-            if (placeTempelate > shippingTemplate) {
-                Tempans = "Place Order";
-            } else Tempans = "Shipping Order";
-        }
-        customercomm = getMostNotified();
-        return (new StatisticModel(customercomm, Tempans));
-    }
-
-
-    public String getMostNotified() {
-        Map<String, Integer> emailCounts = new HashMap<>();
-        Map<String, Integer> phoneCounts = new HashMap<>();
-
-        for (NotificationModel notificationModel : notificationDB) {
-            String preferredCommunication = notificationModel.getCustomerModel().getPreferredCommunicationWay();
-
-            if ("Email".equals(preferredCommunication)) {
-                String email = notificationModel.getCustomerModel().getEmail();
-                emailCounts.put(email, emailCounts.getOrDefault(email, 0) + 1);
-            } else if ("SMS".equals(preferredCommunication)) {
-                String phone = notificationModel.getCustomerModel().getMobileNumber();
-                phoneCounts.put(phone, phoneCounts.getOrDefault(phone, 0) + 1);
-            }
-        }
-
-        Entry<String, Integer> mostNotifiedEmail = findMostNotified(emailCounts);
-        Entry<String, Integer> mostNotifiedPhone = findMostNotified(phoneCounts);
-        if (mostNotifiedEmail != null && mostNotifiedPhone != null) {
-            if (mostNotifiedEmail.getValue() > mostNotifiedPhone.getValue()) {
-                return mostNotifiedEmail.getKey();
-            } else if (mostNotifiedEmail.getValue() < mostNotifiedPhone.getValue()) {
-                return mostNotifiedPhone.getKey();
-            } else {
-                return (mostNotifiedEmail.getKey() + " and " + mostNotifiedPhone.getKey());
-            }
-        }
-        else if(mostNotifiedEmail == null){
-            return mostNotifiedPhone.getKey();
-        }else if( mostNotifiedPhone== null) {
-            return mostNotifiedEmail.getKey();
-        }
-        return null;
-    }
-
-    private Entry<String, Integer> findMostNotified(Map<String, Integer> counts) {
-        String mostNotified = null;
-        int maxCount = 0;
-        for (Map.Entry<String, Integer> entry : counts.entrySet()) {
-            if (entry.getValue() > maxCount) {
-                mostNotified = entry.getKey();
-                maxCount = entry.getValue();
-            }
-        }
-        if (mostNotified != null) {
-            System.out.println("fe 7aga bt return");
-            return new AbstractMap.SimpleEntry<>(mostNotified, maxCount);
-        } else {
-            System.out.println("most nofiied is null in find most notified"+ mostNotified );
-            return null;
-        }
-    }
 }
